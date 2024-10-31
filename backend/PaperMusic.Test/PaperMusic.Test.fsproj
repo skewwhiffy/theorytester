@@ -9,8 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="NoteTests.fs" />
-        <Compile Include="Program.fs" />
+        <Compile Include="AccidentalTests.fs" />
+        <Compile Include="NoteTest.fs" />
+        <Compile Include="PitchTests.fs" />
+        <Compile Include="IntervalTest.fs" />
+        <Compile Include="Dummy.fs" />
     </ItemGroup>
 
     <ItemGroup>

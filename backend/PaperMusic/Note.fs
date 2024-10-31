@@ -11,30 +11,6 @@ type NoteName =
     | F
     | G
 
-type Accidental(offset: int) =
-    static member Flat = Accidental(-1)
-    static member Natural = Accidental(0)
-    static member Sharp = Accidental(1)
-
-    member this.Offset = offset
-    member this.Flatten() = Accidental(offset - 1)
-    member this.Sharpen() = Accidental(offset + 1)
-    member this.ShortString
-        with get() =
-            match offset with
-            | 1 -> "#"
-            | 0 -> ""
-            | _ when offset > 1 -> "x" + this.Flatten().Flatten().ShortString
-            | _ when offset < 0 -> "b" + this.Sharpen().ShortString
-            | _ -> failwith "Maths has failed"
-
-    override this.Equals other =
-        match other with
-        | :? Accidental as otherAccidental -> otherAccidental.Offset.Equals(offset)
-        | _ -> false
-
-    override this.GetHashCode() = offset.GetHashCode()
-
 type Note(name: NoteName, accidental: Accidental) =
     static member A = Note(A, Accidental.Natural)
     static member B = Note(B, Accidental.Natural)
@@ -43,3 +19,15 @@ type Note(name: NoteName, accidental: Accidental) =
     static member E = Note(E, Accidental.Natural)
     static member F = Note(F, Accidental.Natural)
     static member G = Note(G, Accidental.Natural)
+    member this.Name = name
+    member this.Accidental = accidental
+    member this.ShortString = $"{name}{accidental.ShortString}"
+    member this.Flat = Note(name, accidental.Flatten())
+    member this.Sharp = Note(name, accidental.Sharpen())
+
+    override this.Equals other =
+        match other with
+        | :? Note as otherNote -> otherNote.Name.Equals(name) && otherNote.Accidental.Equals(accidental)
+        | _ -> false
+
+    override this.GetHashCode() = HashCode.Combine(name, accidental)

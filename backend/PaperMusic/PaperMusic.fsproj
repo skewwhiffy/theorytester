@@ -6,8 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Accidental.fs" />
         <Compile Include="Note.fs" />
-        <Content Include="README.md" />
+        <Compile Include="Octave.fs" />
+        <Compile Include="Interval.fs" />
+        <Compile Include="Pitch.fs" />
     </ItemGroup>
 
 </Project>
