@@ -5,7 +5,7 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PaperMusic", "PaperMusic\PaperMusic.fsproj", "{812BE1B0-DA2E-4886-A509-8C63485B2889}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PaperMusicTest", "PaperMusicTest\PaperMusicTest.fsproj", "{E100B5BD-0AEA-437D-94D7-D0C38D7CC2D8}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "PaperMusic.Test", "PaperMusic.Test\PaperMusic.Test.fsproj", "{01737244-7A34-4167-8CBA-3EE2113C2877}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,9 +20,9 @@ Global
 		{812BE1B0-DA2E-4886-A509-8C63485B2889}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{812BE1B0-DA2E-4886-A509-8C63485B2889}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{812BE1B0-DA2E-4886-A509-8C63485B2889}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E100B5BD-0AEA-437D-94D7-D0C38D7CC2D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E100B5BD-0AEA-437D-94D7-D0C38D7CC2D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E100B5BD-0AEA-437D-94D7-D0C38D7CC2D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E100B5BD-0AEA-437D-94D7-D0C38D7CC2D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01737244-7A34-4167-8CBA-3EE2113C2877}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01737244-7A34-4167-8CBA-3EE2113C2877}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01737244-7A34-4167-8CBA-3EE2113C2877}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01737244-7A34-4167-8CBA-3EE2113C2877}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
