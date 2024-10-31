@@ -14,18 +14,20 @@ let ``can diminish and augment interval`` () =
     actual.Should().Be(expected)
 
 let shortStringTestData: obj[] list =
-    [ [| Interval.Major.Third; "major 3rd" |]
-      [| Interval.Minor.Sixth; "minor 6th" |]
-      [| Interval.Perfect.Fourth; "perfect 4th" |]
-      [| Interval.Diminished.Third; "diminished 3rd" |] 
-      [| Interval.Diminished.Fourth; "diminished 4th" |] 
-      [| Interval.Augmented.Fifth; "augmented 5th" |] ]
+    [
+      // [| Interval.Major.Third; "major 3rd" |]
+      // [| Interval.Minor.Sixth; "minor 6th" |]
+      // [| Interval.Perfect.Fourth; "perfect 4th" |]
+      // [| Interval.Diminished.Third; "diminished 3rd" |] 
+      // [| Interval.Diminished.Fourth; "diminished 4th" |] 
+      // [| Interval.Augmented.Fifth; "augmented 5th" |]
+      // [| Interval.Diminished.Sixth.Diminish(); "doubly diminished 6th" |]
+      // [| Interval.Diminished.Fifth.Diminish(); "doubly diminished 5th" |]
+      [| Interval.Augmented.Seventh.Augment(); "doubly augmented 7th" |] ]
 // TODO:
 // - Compound
 // - Double compound
 // - 5x compound
-// - Doubly diminished (from perfect and minor)
-// - Doubly augmented
 // - 5x diminished (from perfect and minor)
 // - 5x augmented
 

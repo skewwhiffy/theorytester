@@ -144,6 +144,7 @@ type Interval with
         let positiveQuality (amount: int) =
             match amount with
             | 1 -> "augmented"
+            | 2 -> "doubly augmented"
             | _ -> $"TODO {amount}"
             
         let negativeQuality (amount: int) =
@@ -166,6 +167,7 @@ type Interval with
                 match diminishedAmount with
                 | 0 -> "minor"
                 | 1 -> "diminished"
+                | 2 -> "doubly diminished"
                 | _ -> $"TODO {diminishedAmount}"
 
         let quality =
