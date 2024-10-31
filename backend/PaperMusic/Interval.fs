@@ -146,7 +146,7 @@ type Interval with
             | 1 -> "augmented"
             | 2 -> "doubly augmented"
             | _ -> $"TODO {amount}"
-            
+
         let negativeQuality (amount: int) =
             if amount.Equals(0) then
                 match this.Size with
@@ -172,7 +172,7 @@ type Interval with
 
         let quality =
             match this.Quality.Offset with
-            | it when it > 0 -> positiveQuality (it)
-            | it -> negativeQuality (-it)
+            | it when it > 0 -> positiveQuality it
+            | it -> negativeQuality -it
 
         $"{quality} {ordinal}"
