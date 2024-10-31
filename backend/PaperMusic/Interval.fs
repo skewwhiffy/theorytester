@@ -118,17 +118,17 @@ and AugmentedFactory() =
     static member private perfect: IPerfectFactory =
         WrappingPerfectIntervalFactory(Interval.Perfect, _.Augment())
 
-    static member private minor: INonPerfectFactory =
-        WrappingNonPerfectIntervalFactory(Interval.Minor, _.Augment())
+    static member private major: INonPerfectFactory =
+        WrappingNonPerfectIntervalFactory(Interval.Major, _.Augment())
 
     interface IFactory with
         member this.Unison = AugmentedFactory.perfect.Unison
-        member this.Second = AugmentedFactory.minor.Second
-        member this.Third = AugmentedFactory.minor.Third
+        member this.Second = AugmentedFactory.major.Second
+        member this.Third = AugmentedFactory.major.Third
         member this.Fourth = AugmentedFactory.perfect.Fourth
         member this.Fifth = AugmentedFactory.perfect.Fifth
-        member this.Sixth = AugmentedFactory.minor.Sixth
-        member this.Seventh = AugmentedFactory.minor.Seventh
+        member this.Sixth = AugmentedFactory.major.Sixth
+        member this.Seventh = AugmentedFactory.major.Seventh
         member this.Octave = AugmentedFactory.perfect.Octave
 
 type Interval with
