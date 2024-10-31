@@ -16,14 +16,18 @@ let ``can diminish and augment interval`` () =
 let shortStringTestData: obj[] list =
     [ [| Interval.Major.Third; "major 3rd" |]
       [| Interval.Minor.Sixth; "minor 6th" |]
-      [| Interval.Perfect.Fourth; "perfect 4th" |] ]
-    // TODO:
-    // - Diminished (from perfect and minor)
-    // - Augmented
-    // - Doubly diminished (from perfect and minor)
-    // - Doubly augmented
-    // - 5x diminished (from perfect and minor)
-    // - 5x augmented
+      [| Interval.Perfect.Fourth; "perfect 4th" |]
+      [| Interval.Diminished.Third; "diminished 3rd" |] 
+      [| Interval.Diminished.Fourth; "diminished 4th" |] 
+      [| Interval.Augmented.Fifth; "augmented 5th" |] ]
+// TODO:
+// - Compound
+// - Double compound
+// - 5x compound
+// - Doubly diminished (from perfect and minor)
+// - Doubly augmented
+// - 5x diminished (from perfect and minor)
+// - 5x augmented
 
 [<Theory>]
 [<MemberData(nameof shortStringTestData)>]
