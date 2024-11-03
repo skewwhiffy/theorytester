@@ -28,3 +28,4 @@ type Accidental(offset: int) =
         | _ -> false
 
     override this.GetHashCode() = offset.GetHashCode()
+    override this.ToString() = this.ShortString
