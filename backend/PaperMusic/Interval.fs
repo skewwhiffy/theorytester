@@ -20,6 +20,7 @@ type IntervalQuality(offsetFromDefault: int) =
     override this.GetHashCode() = offsetFromDefault.GetHashCode()
 
 type IQualityFactory =
+    abstract Compound: IQualityFactory
     abstract Major: INonPerfectFactory
     abstract Minor: INonPerfectFactory
     abstract Perfect: IPerfectFactory
@@ -49,6 +50,15 @@ and INonPerfectFactory =
     abstract Seventh: Interval
 
 and Interval(size: int, quality: IntervalQuality) =
+    static member wrap(wrapped: IQualityFactory, transform: Interval -> Interval) =
+        { new IQualityFactory with
+            member this.Compound = Interval.wrap (wrapped.Compound, transform)
+            member this.Perfect = Interval.wrap (wrapped.Perfect, transform)
+            member this.Augmented = Interval.wrap (wrapped.Augmented, transform)
+            member this.Major = Interval.wrap (wrapped.Major, transform)
+            member this.Diminished = Interval.wrap (wrapped.Diminished, transform)
+            member this.Minor = Interval.wrap (wrapped.Minor, transform) }
+
     static member wrap(wrapped: INonPerfectFactory, transform: Interval -> Interval) =
         { new INonPerfectFactory with
             member this.Second = transform wrapped.Second
@@ -85,10 +95,11 @@ and Interval(size: int, quality: IntervalQuality) =
             member this.Seventh = nonPerfect.Seventh
             member this.Octave = perfect.Octave }
 
-    static member Compound =
+    static member Compound: IQualityFactory =
         let compound: Interval -> Interval = fun it -> Interval(it.Size + 7, it.Quality)
 
         { new IQualityFactory with
+            member this.Compound = Interval.wrap (Interval.Compound, compound)
             member this.Perfect = Interval.wrap (Interval.Perfect, compound)
 
             member this.Augmented = Interval.wrap (Interval.Augmented, compound)
@@ -138,8 +149,14 @@ and Interval(size: int, quality: IntervalQuality) =
 type Interval with
     [<JsonIgnore>]
     member this.ShortString =
-        if (this.Size > 8) then
-            $"compound {Interval(this.Size - 7, this.Quality).ShortString}"
+        if this.Size > 8 then
+            let prefix =
+                match this.Size / 7 with
+                | it when it > 2 -> $"{it}x compound"
+                | 2 -> "double compound"
+                | _ -> "compound"
+
+            $"{prefix} {Interval(this.Size % 7, this.Quality).ShortString}"
         else
             let ordinal =
                 match this.Size with
@@ -152,7 +169,7 @@ type Interval with
                 match amount with
                 | 1 -> "augmented"
                 | 2 -> "doubly augmented"
-                | _ -> $"TODO {amount}"
+                | _ -> $"{amount}x augmented"
 
             let negativeQuality (amount: int) =
                 if amount.Equals(0) then
@@ -175,7 +192,7 @@ type Interval with
                     | 0 -> "minor"
                     | 1 -> "diminished"
                     | 2 -> "doubly diminished"
-                    | _ -> $"TODO {diminishedAmount}"
+                    | _ -> $"{diminishedAmount}x diminished"
 
             let quality =
                 match this.Quality.Offset with
