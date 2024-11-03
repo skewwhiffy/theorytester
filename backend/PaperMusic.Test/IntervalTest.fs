@@ -16,6 +16,7 @@ let ``can diminish and augment interval`` () =
 let shortStringTestData: obj[] list =
     [ [| Interval.Major.Third; "major 3rd" |]
       [| Interval.Minor.Sixth; "minor 6th" |]
+      [| Interval.Compound.Major.Second; "compound major 2nd" |]
       [| Interval.Perfect.Fourth; "perfect 4th" |]
       [| Interval.Diminished.Third; "diminished 3rd" |]
       [| Interval.Diminished.Fourth; "diminished 4th" |]
@@ -24,7 +25,6 @@ let shortStringTestData: obj[] list =
       [| Interval.Diminished.Fifth.Diminish(); "doubly diminished 5th" |]
       [| Interval.Augmented.Seventh.Augment(); "doubly augmented 7th" |] ]
 // TODO:
-// - Compound
 // - Double compound
 // - 5x compound
 // - 5x diminished (from perfect and minor)

@@ -19,7 +19,14 @@ type IntervalQuality(offsetFromDefault: int) =
 
     override this.GetHashCode() = offsetFromDefault.GetHashCode()
 
-type IFactory =
+type IQualityFactory =
+    abstract Major: INonPerfectFactory
+    abstract Minor: INonPerfectFactory
+    abstract Perfect: IPerfectFactory
+    abstract Diminished: IFactory
+    abstract Augmented: IFactory
+
+and IFactory =
     abstract Unison: Interval
     abstract Second: Interval
     abstract Third: Interval
@@ -56,6 +63,17 @@ and Interval(size: int, quality: IntervalQuality) =
             member this.Fifth = transform wrapped.Fifth
             member this.Octave = transform wrapped.Octave }
 
+    static member wrap(wrapped: IFactory, transform: Interval -> Interval) =
+        { new IFactory with
+            member this.Unison = transform wrapped.Unison
+            member this.Second = transform wrapped.Second
+            member this.Third = transform wrapped.Third
+            member this.Fourth = transform wrapped.Fourth
+            member this.Fifth = transform wrapped.Fifth
+            member this.Sixth = transform wrapped.Sixth
+            member this.Seventh = transform wrapped.Seventh
+            member this.Octave = transform wrapped.Octave }
+
     static member wrap(perfect: IPerfectFactory, nonPerfect: INonPerfectFactory) =
         { new IFactory with
             member this.Unison = perfect.Unison
@@ -67,7 +85,18 @@ and Interval(size: int, quality: IntervalQuality) =
             member this.Seventh = nonPerfect.Seventh
             member this.Octave = perfect.Octave }
 
-    static member Perfect =
+    static member Compound =
+        let compound: Interval -> Interval = fun it -> Interval(it.Size + 7, it.Quality)
+
+        { new IQualityFactory with
+            member this.Perfect = Interval.wrap (Interval.Perfect, compound)
+
+            member this.Augmented = Interval.wrap (Interval.Augmented, compound)
+            member this.Major = Interval.wrap (Interval.Major, compound)
+            member this.Diminished = Interval.wrap (Interval.Diminished, compound)
+            member this.Minor = Interval.wrap (Interval.Minor, compound) }
+
+    static member Perfect: IPerfectFactory =
         let perfect = IntervalQuality(0)
 
         { new IPerfectFactory with
@@ -76,7 +105,7 @@ and Interval(size: int, quality: IntervalQuality) =
             member this.Fifth = Interval(5, perfect)
             member this.Octave = Interval(8, perfect) }
 
-    static member Major =
+    static member Major: INonPerfectFactory =
         let major = IntervalQuality(0)
 
         { new INonPerfectFactory with
@@ -86,12 +115,12 @@ and Interval(size: int, quality: IntervalQuality) =
             member this.Seventh = Interval(7, major) }
 
 
-    static member Minor = Interval.wrap (Interval.Major, _.Diminish())
+    static member Minor: INonPerfectFactory = Interval.wrap (Interval.Major, _.Diminish())
 
-    static member Diminished =
+    static member Diminished: IFactory =
         Interval.wrap (Interval.wrap (Interval.Perfect, _.Diminish()), Interval.wrap (Interval.Minor, _.Diminish()))
 
-    static member Augmented =
+    static member Augmented: IFactory =
         Interval.wrap (Interval.wrap (Interval.Perfect, _.Augment()), Interval.wrap (Interval.Major, _.Augment()))
 
     member this.Size = size
@@ -109,45 +138,48 @@ and Interval(size: int, quality: IntervalQuality) =
 type Interval with
     [<JsonIgnore>]
     member this.ShortString =
-        let ordinal =
-            match if this.Size > 20 then this.Size % 10 else this.Size % 20 with
-            | 1 -> string this.Size + "st"
-            | 2 -> string this.Size + "nd"
-            | 3 -> string this.Size + "rd"
-            | _ -> string this.Size + "th"
-
-        let positiveQuality (amount: int) =
-            match amount with
-            | 1 -> "augmented"
-            | 2 -> "doubly augmented"
-            | _ -> $"TODO {amount}"
-
-        let negativeQuality (amount: int) =
-            if amount.Equals(0) then
+        if (this.Size > 8) then
+            $"compound {Interval(this.Size - 7, this.Quality).ShortString}"
+        else
+            let ordinal =
                 match this.Size with
-                | 1
-                | 4
-                | 5
-                | 8 -> "perfect"
-                | _ -> "major"
-            else
-                let diminishedAmount =
+                | 1 -> string this.Size + "st"
+                | 2 -> string this.Size + "nd"
+                | 3 -> string this.Size + "rd"
+                | _ -> string this.Size + "th"
+
+            let positiveQuality (amount: int) =
+                match amount with
+                | 1 -> "augmented"
+                | 2 -> "doubly augmented"
+                | _ -> $"TODO {amount}"
+
+            let negativeQuality (amount: int) =
+                if amount.Equals(0) then
                     match this.Size with
                     | 1
                     | 4
                     | 5
-                    | 8 -> amount
-                    | _ -> amount - 1
+                    | 8 -> "perfect"
+                    | _ -> "major"
+                else
+                    let diminishedAmount =
+                        match this.Size with
+                        | 1
+                        | 4
+                        | 5
+                        | 8 -> amount
+                        | _ -> amount - 1
 
-                match diminishedAmount with
-                | 0 -> "minor"
-                | 1 -> "diminished"
-                | 2 -> "doubly diminished"
-                | _ -> $"TODO {diminishedAmount}"
+                    match diminishedAmount with
+                    | 0 -> "minor"
+                    | 1 -> "diminished"
+                    | 2 -> "doubly diminished"
+                    | _ -> $"TODO {diminishedAmount}"
 
-        let quality =
-            match this.Quality.Offset with
-            | it when it > 0 -> positiveQuality it
-            | it -> negativeQuality -it
+            let quality =
+                match this.Quality.Offset with
+                | it when it > 0 -> positiveQuality it
+                | it -> negativeQuality -it
 
-        $"{quality} {ordinal}"
+            $"{quality} {ordinal}"
