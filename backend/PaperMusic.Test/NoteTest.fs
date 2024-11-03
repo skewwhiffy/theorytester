@@ -1,4 +1,4 @@
-module NoteTest
+module PaperMusic.Test.NoteTest
 
 open PaperMusic
 open Xunit

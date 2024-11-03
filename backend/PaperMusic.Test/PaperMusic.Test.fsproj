@@ -13,6 +13,7 @@
         <Compile Include="NoteTest.fs" />
         <Compile Include="PitchTests.fs" />
         <Compile Include="IntervalTest.fs" />
+        <Compile Include="ScaleStart.fs" />
         <Compile Include="Dummy.fs" />
     </ItemGroup>
 

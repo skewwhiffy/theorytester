@@ -1,4 +1,4 @@
-module PitchTests
+module PaperMusic.Test.PitchTests
 
 open PaperMusic
 open Xunit

@@ -1,4 +1,4 @@
-module IntervalTest
+module PaperMusic.Test.IntervalTest
 
 open PaperMusic
 open Xunit

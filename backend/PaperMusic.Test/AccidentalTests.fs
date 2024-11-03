@@ -1,4 +1,4 @@
-module AccidentalTests
+module PaperMusic.Test.AccidentalTests
 
 open Faqt
 open PaperMusic
