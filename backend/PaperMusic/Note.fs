@@ -1,6 +1,7 @@
 ﻿namespace PaperMusic
 
 open System
+open System.Text.Json.Serialization
 
 type NoteName =
     | A
@@ -22,7 +23,9 @@ type Note(name: NoteName, accidental: Accidental) =
     member this.Name = name
     member this.Accidental = accidental
     member this.ShortString = $"{name}{accidental.ShortString}"
+    [<JsonIgnore>]
     member this.Flat = Note(name, accidental.Flatten())
+    [<JsonIgnore>]
     member this.Sharp = Note(name, accidental.Sharpen())
 
     override this.Equals other =
@@ -31,3 +34,4 @@ type Note(name: NoteName, accidental: Accidental) =
         | _ -> false
 
     override this.GetHashCode() = HashCode.Combine(name, accidental)
+    override this.ToString() = this.ShortString

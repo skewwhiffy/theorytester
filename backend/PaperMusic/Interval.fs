@@ -49,7 +49,7 @@ and INonPerfectFactory =
     abstract Sixth: Interval
     abstract Seventh: Interval
 
-and Interval(size: int, quality: IntervalQuality) =
+and Interval(size: uint, quality: IntervalQuality) =
     static member wrap(wrapped: IQualityFactory, transform: Interval -> Interval) =
         { new IQualityFactory with
             member this.Compound = Interval.wrap (wrapped.Compound, transform)
@@ -96,7 +96,7 @@ and Interval(size: int, quality: IntervalQuality) =
             member this.Octave = perfect.Octave }
 
     static member Compound: IQualityFactory =
-        let compound: Interval -> Interval = fun it -> Interval(it.Size + 7, it.Quality)
+        let compound: Interval -> Interval = fun it -> Interval(it.Size + 7u, it.Quality)
 
         { new IQualityFactory with
             member this.Compound = Interval.wrap (Interval.Compound, compound)
@@ -111,19 +111,19 @@ and Interval(size: int, quality: IntervalQuality) =
         let perfect = IntervalQuality(0)
 
         { new IPerfectFactory with
-            member this.Unison = Interval(1, perfect)
-            member this.Fourth = Interval(4, perfect)
-            member this.Fifth = Interval(5, perfect)
-            member this.Octave = Interval(8, perfect) }
+            member this.Unison = Interval(1u, perfect)
+            member this.Fourth = Interval(4u, perfect)
+            member this.Fifth = Interval(5u, perfect)
+            member this.Octave = Interval(8u, perfect) }
 
     static member Major: INonPerfectFactory =
         let major = IntervalQuality(0)
 
         { new INonPerfectFactory with
-            member this.Second = Interval(2, major)
-            member this.Third = Interval(3, major)
-            member this.Sixth = Interval(6, major)
-            member this.Seventh = Interval(7, major) }
+            member this.Second = Interval(2u, major)
+            member this.Third = Interval(3u, major)
+            member this.Sixth = Interval(6u, major)
+            member this.Seventh = Interval(7u, major) }
 
 
     static member Minor: INonPerfectFactory = Interval.wrap (Interval.Major, _.Diminish())
@@ -146,23 +146,22 @@ and Interval(size: int, quality: IntervalQuality) =
 
     override this.GetHashCode() = HashCode.Combine(size, quality)
 
-type Interval with
     [<JsonIgnore>]
     member this.ShortString =
-        if this.Size > 8 then
+        if this.Size > 8u then
             let prefix =
-                match this.Size / 7 with
-                | it when it > 2 -> $"{it}x compound"
-                | 2 -> "double compound"
+                match this.Size / 7u with
+                | it when it > 2u -> $"{it}x compound"
+                | 2u -> "double compound"
                 | _ -> "compound"
 
-            $"{prefix} {Interval(this.Size % 7, this.Quality).ShortString}"
+            $"{prefix} {Interval(this.Size % 7u, this.Quality).ShortString}"
         else
             let ordinal =
                 match this.Size with
-                | 1 -> string this.Size + "st"
-                | 2 -> string this.Size + "nd"
-                | 3 -> string this.Size + "rd"
+                | 1u -> string this.Size + "st"
+                | 2u -> string this.Size + "nd"
+                | 3u -> string this.Size + "rd"
                 | _ -> string this.Size + "th"
 
             let positiveQuality (amount: int) =
@@ -174,18 +173,18 @@ type Interval with
             let negativeQuality (amount: int) =
                 if amount.Equals(0) then
                     match this.Size with
-                    | 1
-                    | 4
-                    | 5
-                    | 8 -> "perfect"
+                    | 1u
+                    | 4u
+                    | 5u
+                    | 8u -> "perfect"
                     | _ -> "major"
                 else
                     let diminishedAmount =
                         match this.Size with
-                        | 1
-                        | 4
-                        | 5
-                        | 8 -> amount
+                        | 1u
+                        | 4u
+                        | 5u
+                        | 8u -> amount
                         | _ -> amount - 1
 
                     match diminishedAmount with
@@ -200,3 +199,5 @@ type Interval with
                 | it -> negativeQuality -it
 
             $"{quality} {ordinal}"
+
+    override this.ToString() = this.ShortString

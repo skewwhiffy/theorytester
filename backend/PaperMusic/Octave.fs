@@ -18,3 +18,4 @@ type Octave(offset: int) =
         | _ -> false
 
     override this.GetHashCode() = offset.GetHashCode()
+    override this.ToString() = $"[{offset}]"
